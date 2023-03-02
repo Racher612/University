@@ -1,0 +1,55 @@
+const asideMenu = () => {
+  const scrollLock = window.scrollLock;
+
+  const parent = document.querySelector('[data-aside-menu="parent"]');
+  if (!parent) return;
+
+  const overlay = parent.querySelector('[data-aside-menu="overlay"]');
+  const openBtnList = document.querySelectorAll('[data-aside-menu="btn"]');
+  const closeBtnList = parent.querySelectorAll('[data-aside-menu="close"]');
+  const wrapperNav = parent.querySelector('[data-aside-menu="wrapper-nav"]');
+  const pageWrapepr = document.querySelector('[data-page="wrapper"]')
+  if (!closeBtnList.length || !openBtnList.length) return;
+
+  const closeMenu = () => {
+    const menuList = parent.querySelectorAll('[data-aside-menu-nav]');
+    menuList.forEach((menu) => menu.classList.remove('is-active'));
+    overlay?.classList.remove('is-active');
+    wrapperNav?.classList.remove('is-active');
+    scrollLock.enableScrolling();
+    pageWrapepr.style = null;
+  };
+
+  const onClickClose = (evt) => {
+    const btn = evt.target.closest('[data-aside-menu="close"]');
+    if (!btn) return;
+
+    const menu = btn.closest(`[data-aside-menu-nav]`);
+    if (!menu) return;
+
+    menu.classList.remove('is-active');
+    closeMenu();
+  };
+
+  const onClickParent = (evt) => {
+    const btn = evt.target.closest('[data-aside-menu="btn"]');
+    if (!btn) return;
+
+    const name = btn.dataset?.asideName;
+    const menu = parent.querySelector(`[data-aside-menu-nav="${name}"]`);
+    if (!menu) return;
+
+    menu.classList.add('is-active');
+    overlay?.classList.add('is-active');
+    wrapperNav?.classList.add('is-active');
+    scrollLock.disableScrolling();
+
+    if (window.innerWidth < 1024) pageWrapepr.style.zIndex = '10000000'
+  }
+
+  overlay?.addEventListener('click', closeMenu);
+  openBtnList.forEach((openBtn) => openBtn.addEventListener('click', onClickParent));
+  closeBtnList.forEach((closeBtn) => closeBtn.addEventListener('click', onClickClose));
+}
+
+asideMenu();

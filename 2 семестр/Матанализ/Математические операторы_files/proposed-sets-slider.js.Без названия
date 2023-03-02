@@ -1,0 +1,38 @@
+document.addEventListener('DOMContentLoaded', () => {
+  const proposedWrapper = document.querySelector('[data-symbol="proposed-wrapper"]');
+
+  if (proposedWrapper) {
+    const slider = proposedWrapper.querySelector('[data-symbol="swiper"]');
+    const btnNext = proposedWrapper.querySelector('[data-symbol-slider="next"]');
+    const btnPrev = proposedWrapper.querySelector('[data-symbol-slider="prev"]');
+
+    if (slider) {
+      const swiper = new Swiper(slider, {
+        spaceBetween: 12,
+        slidesPerView: 'auto',
+        slidesOffsetAfter: 12,
+        slidesOffsetBefore: 12,
+        breakpoints: {
+          767: {
+            spaceBetween: 20,
+            slidesOffsetAfter: 20,
+            slidesOffsetBefore: 20,
+          },
+          1023: {
+            slidesPerView: 6,
+            slidesOffsetAfter: 0,
+            slidesOffsetBefore: 0,
+            spaceBetween: 20,
+            navigation: {
+              nextEl: btnNext,
+              prevEl: btnPrev,
+              disabledClass: 'is-disabled',
+              hiddenClass: 'is-hidden',
+            },
+          }
+        }
+      });
+    }
+  }
+})
+

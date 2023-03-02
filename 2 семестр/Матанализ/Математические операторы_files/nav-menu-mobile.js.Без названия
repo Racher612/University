@@ -1,0 +1,27 @@
+// const navMenuMobile = () => {
+//   const btnOpen = document.querySelector('[data-nav-menu="open"]');
+//   const btnClose = document.querySelector('[data-nav-menu="close"]');
+//   const menu = document.querySelector('[data-nav-menu="menu"]');
+    
+//   if (btnOpen && menu) {
+//     const closeMenu = () => {
+//       if (menu.classList.contains('active')) {
+//         menu.classList.remove('active');
+//         document.body.style.overflow = 'auto';
+//         btnClose.removeEventListener('click', closeMenu);
+//       }
+//     };
+
+//     const openMenu = () => {
+//       if (!menu.classList.contains('active')) {
+//         menu.classList.add('active');
+//         document.body.style.overflow = 'hidden';
+//         btnClose.addEventListener('click', closeMenu);
+//       }
+//     };
+
+//     btnOpen.addEventListener('click', openMenu);
+//   }
+// };
+
+// navMenuMobile();

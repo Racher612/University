@@ -1,0 +1,22 @@
+(function (c) {
+    if (isEngineInited()){
+        return;
+    }
+
+    let script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.async = 1;
+    script.src = c.managerUrl;
+    script.dataset.roxotInited = 'true';
+
+    let head = document.getElementsByTagName('head')[0];
+    head.insertBefore(script, head.firstChild);
+
+    window.rom = window.rom || {cmd: [], icmd: []};
+    window.rom.icmd = window.rom.icmd || [];
+    window.rom.icmd.push(c);
+
+    function isEngineInited(){
+        return  document.querySelectorAll('[data-roxot-inited]').length;
+    }
+})({"publisherId":"39987cbf-8221-497b-984a-ed27241de46c","publisher":"Unicode Table","adBlockMode":"iframe","iframeSspList":["google","prebid","prebid_dfp"],"managerUrl":"https:\/\/cdn.skcrtxr.com\/wrapper\/js\/common-engine.js?v=s-aa70a4d5-5000-47ce-a7c5-2dbbb126504e","wrapperUrl":"https:\/\/cdn.skcrtxr.com\/wrapper\/js\/wrapper.js?v=s-aa70a4d5-5000-47ce-a7c5-2dbbb126504e","placementConfigTemplate":"https:\/\/cdn.skcrtxr.com\/wrapper-builder\/placement\/__PLACEMENT_ID__?v=d-1677671555","gfsPlacementOptionsTemplate":"https:\/\/cdn.skcrtxr.com\/wrapper-builder\/gfs-placement\/__PLACEMENT_ID__?v=d-1677671555","isLanguageSpecific":false,"hostConfig":{"unicode-table.com":{"wrapperOptions":{"universalPlaceHolder":{"enabled":false,"placeHolderContainerConfig":{"backgroundColor":"#DCDCDC"},"noticeContainerConfig":{"backgroundColor":"#D3D3D3","backgroundBorderColor":"#D3D3D3"},"noticeMessageConfig":{"color":"#000000","fontSize":"14px","text":"Loading..."}},"limits":{"roxot_adfox_video":{"visiblePercentage":0}}},"isAcceptableAdsEnabled":false},"symbl.cc":{"wrapperOptions":{"universalPlaceHolder":{"enabled":false,"placeHolderContainerConfig":{"backgroundColor":"#DCDCDC"},"noticeContainerConfig":{"backgroundColor":"#D3D3D3","backgroundBorderColor":"#D3D3D3"},"noticeMessageConfig":{"color":"#000000","fontSize":"14px","text":"Loading..."}},"limits":{"roxot_adfox_video":{"visiblePercentage":0}}},"isAcceptableAdsEnabled":false}},"isBrowserSpecific":false,"isOsSpecific":false,"isDeviceTypeSpecific":true,"isGeoSpecific":true,"isGetParamSpecific":false,"dynamicUrlTemplate":"https:\/\/cdn.skcrtxr.com\/wrapper-builder\/39987cbf-8221-497b-984a-ed27241de46c\/dynamic.js?host=__HOST__&v=d-1677671555__s-aa70a4d5-5000-47ce-a7c5-2dbbb126504e","wrapperConfig":{"monetizationStatsIntegration":{"enabled":true,"requestSettings":{"isNeedToSend":true,"sampleCoefficient":1},"impressionSettings":{"isNeedToSend":true,"sampleCoefficient":1}},"isInlineBlock":false,"host":"unicode-table.com","engineFileName":"roxot-common-engine.js","prebid":{"adjustment":{"adriver":0.95,"appnexus":0.95,"between":0.95,"criteo":0.9,"otm":0.95,"rubicon":0.97},"path":"https:\/\/cdn.skcrtxr.com\/wrapper\/js\/prebid.js?v=s-aa70a4d5-5000-47ce-a7c5-2dbbb126504e"},"roxotYaMetric":{"enabled":true,"counterId":88477929},"limits":{"roxot_adfox_video":{"refreshTimeSeconds":3000,"requestTimeout":20,"noServerTimeout":10000}},"pageKeyValues":{"enabled":true,"keyList":["age","device","time","siteid","size"]},"enableAdFirstLoadInHiddenTab":true,"adfox":{"hb":{"biddersMap":{"betweenDigital":"1945468","myTarget":"1945461","otm":"1945469","segmento":"1945470","getintent":"1945477","hybrid":"1945478","adriver":"1945479","buzzoola":"1945480","relap":"1945481","adfox_yandex_premium-publisher-network":"1946302","adfox_yandex_roxot-adfox-hb":"2043702","rtbhouse":"1393902","criteo":"1393905","videonow":"1407059"},"timeout":1000}},"syncCookies":{"enabled":true,"alwaysSyncBidders":["upravelBidder","mediaSniperBidder"]},"videojsLibs":{"path":"https:\/\/cdn.skcrtxr.com\/wrapper\/js\/video-libs.js?v=s-aa70a4d5-5000-47ce-a7c5-2dbbb126504e"},"pageUrlVariableName":"roxotPlusPageUrl","stubVideoPath":"https:\/\/cdn.skcrtxr.com\/wrapper\/js\/video-ad?v=s-aa70a4d5-5000-47ce-a7c5-2dbbb126504e","adfoxIntegrationType":"direct","yandexIntegrationType":"common","openRtbHost":"https:\/\/openrtb.skcrtxr.com"},"lazyLoading":[],"geoSpecificUrl":"https:\/\/geo-worker.skcrtxr.com\/api\/geo\/region","openRtbApiGetUserInfoUrl":"https:\/\/skcrtxr.com\/open-rtb-api\/get-user-bidders-info","syncCookiesUrl":"https:\/\/skcrtxr.com\/user-sync-api\/sync"})

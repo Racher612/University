@@ -1,0 +1,82 @@
+const openNav = () => {
+    const container = document.querySelector('[data-nav-block="menu"]');
+
+    if (container) {
+        const btn = document.querySelector('[data-nav-block="btn"]');
+        const menu = document.querySelector('[data-nav-block="menu"]');
+        const closeBtns = document.querySelectorAll('[data-nav-block="close-btn"]');
+        const body = document.querySelector('body');
+
+        const isClicked = (evt) => {
+            const target = evt.target;
+            const itsMenu = target === menu || menu.contains(target);
+            const menuIsActive = menu.classList.contains('active');
+
+            if (!itsMenu && menuIsActive && window.innerWidth > 767) {
+                closeMenu();
+            }
+        };
+
+        const closeMenu = () => {
+                document.removeEventListener('click', isClicked);
+                menu.style.display = "none";
+                menu.classList.remove('active');
+                body.style = null;
+                closeBtns.forEach(item => {
+                item.removeEventListener('click', closeMenu);
+            });
+
+            if (window.innerWidth < 1023) {
+                menu.previousElementSibling.style.display = null;
+            }
+        }
+
+        const openMenu = () => {
+            Object.assign(body.style, {
+                overflow: "hidden",
+                position: "fixed",
+                top: "0",
+                height: "100%",
+            });
+
+            menu.style = `display: block; height: 100%;`;
+
+            closeBtns.forEach(item => {
+                item.addEventListener('click', closeMenu);
+            })
+
+            if (window.innerWidth < 1023) {
+                menu.previousElementSibling.style.display = "none"
+
+                const currentItem = document.querySelector('[data-proposed-sets="current"]');
+                const currentCategory = currentItem.parentElement.previousElementSibling;
+                const container = document.querySelector('[data-proposed-sets="container"]');
+                const scrollHeight = currentItem.offsetTop - currentCategory.offsetHeight;
+
+                setTimeout(() => {
+                    container.scrollTo({
+                        top: scrollHeight,
+                    });
+                }, 0)
+            }
+        }
+
+        btn.addEventListener('click', () => {
+            if (!menu.classList.contains('active')) {
+                document.addEventListener('click', isClicked);
+                setTimeout(() => {
+                    openMenu();
+                }, 50);
+            }
+        });
+    }
+};
+openNav();
+
+const breadcrumbsList = document.querySelector('[data-breadcrumbs="list"]');
+
+if (breadcrumbsList) breadcrumbsList.scrollTo(breadcrumbsList.scrollWidth, 0);
+
+window.addEventListener('resize', () => {
+    if (breadcrumbsList) breadcrumbsList.scrollTo(breadcrumbsList.scrollWidth, 0);
+})

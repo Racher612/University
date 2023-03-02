@@ -1,0 +1,97 @@
+'use strict'
+document.addEventListener('DOMContentLoaded', () => {
+    const SHADOW_HEIGHT = 4;
+
+    const header = document.querySelector('[data-sticky-header="sticky-header"]');
+    if (!header) return;
+    const headerWrapper = header.querySelector('.header-inner')
+    const sidebar = document.querySelector('[data-sticky-header="sticky-sidebar"]');
+    let sidebarParent;
+
+    if (sidebar) {
+        sidebarParent = sidebar.closest('[data-nav-block="menu"]');
+    }
+
+    const onScrollHeader = () => {
+        let currentScroll = 0;
+        let prevScroll = 0;
+        let headerPosition = -header.offsetHeight;
+
+        const checkHeaderPosition = () => {
+            if (headerPosition < -header.offsetHeight - SHADOW_HEIGHT) {
+                headerPosition = -header.offsetHeight - SHADOW_HEIGHT;
+            }
+
+            if (headerPosition > 0) {
+                headerPosition = 0;
+            }
+        }
+
+        const setHeaderPosition = (position) => {
+            Object.assign(header.style, {
+                position: `sticky`,
+                top: `${position}px`,
+                opacity: 1,
+                zIndex: 10,
+            });
+        }
+
+        const setSidebarPosition = (headerPosition) => {
+            if (document.documentElement.clientWidth > 1023) {
+                let sidebarPositionBottom = 0
+                if (sidebarParent.getBoundingClientRect().bottom - window.innerHeight <= 0) {
+                    sidebarPositionBottom = sidebarParent.getBoundingClientRect().bottom - window.innerHeight;
+                } else if (sidebarParent.getBoundingClientRect().top >= 0) {
+                    sidebarPositionBottom = header.offsetHeight - sidebar.getBoundingClientRect().top;
+                }
+
+                let sidebarHeight = `calc(100vh - ${header.offsetHeight + headerPosition - sidebarPositionBottom}px)`;
+
+
+                Object.assign(sidebar.style, {
+                    top: `${header.offsetHeight + headerPosition}px`,
+                    height: sidebarHeight,
+                });
+            }
+        }
+
+        const toggleShadow = () => {
+            if (currentScroll > header.offsetHeight) {
+                headerWrapper.classList.add('shadow');
+            } else {
+                headerWrapper.classList.remove('shadow');
+            }
+        }
+
+        if (sidebar) {
+            setSidebarPosition(0);
+            const sidebarParentHeight = sidebarParent.offsetHeight;
+            sidebarParent.style = `height: ${sidebarParentHeight}px`;
+        }
+
+        window.addEventListener('scroll', () => {
+            currentScroll = window.pageYOffset;
+            toggleShadow();
+
+            if (currentScroll < prevScroll) {
+                headerPosition = headerPosition + (prevScroll - currentScroll);
+                checkHeaderPosition();
+                setHeaderPosition(headerPosition);
+                if (sidebar) {
+                    setSidebarPosition(headerPosition);
+                }
+            } else {
+                headerPosition = headerPosition - (currentScroll - prevScroll);
+                checkHeaderPosition();
+                setHeaderPosition(headerPosition);
+                if (sidebar) {
+                    setSidebarPosition(headerPosition);
+                }
+            }
+
+            prevScroll = currentScroll;
+        })
+    }
+
+    onScrollHeader();
+});

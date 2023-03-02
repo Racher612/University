@@ -1,0 +1,39 @@
+const proposedSetsInnerSlider = () => {
+  const container = document.querySelector('.swiper-container-sets');
+  const breakpoint = window.matchMedia('(max-width: 1023px)');
+  const breakpoint767 = window.matchMedia('(max-width: 767px)');
+
+  if (container) {
+    const itemsSwiper = container.querySelectorAll('.swiper-slide');
+    let mySwiper;
+
+    const breakpointChecked = () => {
+      if (breakpoint.matches && container && itemsSwiper.length >= 4 && breakpoint767.matches) {
+        mySwiper = new Swiper(container, {
+          slidesPerView: 4,
+          slidesPerGroup: 4,
+          pagination: {
+            el: '.pagination-swiper',
+          }
+        });
+      } else if (breakpoint.matches && container && itemsSwiper.length >= 8) {
+        mySwiper = new Swiper(container, {
+          slidesPerView: 8,
+          slidesPerGroup: 4,
+          pagination: {
+            el: '.pagination-swiper',
+          }
+        });
+      } else {
+        if (mySwiper) {
+          mySwiper.destroy();
+        }
+      }
+    }
+
+    breakpoint.addListener(breakpointChecked);
+    breakpointChecked();
+  }
+};
+
+proposedSetsInnerSlider();

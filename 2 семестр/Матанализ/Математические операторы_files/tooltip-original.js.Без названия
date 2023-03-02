@@ -1,0 +1,238 @@
+// TODO: move inside separate utils file
+const UINode = document.querySelector('#js-char-popup-ui'); // место для отрисовки попапа в html
+const touchScreen = ('ontouchstart' in document.documentElement); // это означает что сейчас мобильное устройство
+const popupArea = document.querySelector('#js-char-popup-area'); // Весь блок с эелементами на которые будет наводится мышка
+
+const arrow = () => (`<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M14.8408 10.6223L5.26318 15.6742V5.57031L14.8408 10.6223Z" fill="black"/>
+</svg>`);
+
+const wrapLastWordWithNoSpace = function (string, htmlStringToConcat) {
+  const stringAsArray = string.split(" ");
+  const lastWordIndex = stringAsArray.length - 1;
+  const lastWord = stringAsArray[lastWordIndex];
+  stringAsArray.splice(lastWordIndex, 1);
+  const stringWithoutLastWord = stringAsArray.join(" ");
+  const glue = (stringWithoutLastWord.length > 0 ? ' ' : '');
+
+  return `${stringWithoutLastWord} <span style="white-space: nowrap;">${glue}${lastWord + htmlStringToConcat}</span>`;
+};
+
+// Функция заменяет символы на unicod
+function escapeHTML(unsafe) {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+};
+
+function isCopiedSymbol(num) {
+  return !(num < 32
+      || num === 127
+      || (num >= 128 && num < 160)
+      || (num >= 55296 && num <= 57343)
+      || num === 1564);
+};
+
+function prepareContent(reference) {
+  const data = JSON.parse(reference.getAttribute('data-template'));
+
+  if (data) {
+    const symbolNum = data.html_code.match(/\d+/g);
+    const content = `
+      <div class="tooltip" id="js-char-popup-template">
+        ${isCopiedSymbol(symbolNum)
+          ? `<!--<button type="button" class="tooltip__btn-favorites js-favorites-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <use xlink:href="#heart"></use>
+            </svg>
+          </button>-->` : ''}
+
+        <div class="tooltip__symbol-block">
+          <div class="tooltip__symbol-block-square"></div>
+          ${data.image
+            ? `<img class="tooltip__symbol-img" src="${data.image}" alt="${data.symbol}">`
+            : `<span class="tooltip__symbol ${data.css_class ? data.css_class : ''}">${data.symbol}</span>`
+          }
+        </div>
+        <div class="tooltip__desc">
+          <a href="${data.url}">${wrapLastWordWithNoSpace(data.title, arrow())}</a>
+        </div>
+
+        <ul class="tooltip__code-list">
+          <li class="tooltip__code-item">
+            <span class="tooltip__title">${UINode.dataset.unicodeNumber}:</span>
+            <button type="button" data-label="${UINode.dataset.codeText}" class="tooltip__code js-code-symbl js-copy-char-btn" data-clipboard-text="${escapeHTML(data.number)}">${escapeHTML(data.number)}</button>
+          </li>
+          <li class="tooltip__code-item">
+            <span class="tooltip__title">${UINode.dataset.htmlCode}:</span>
+            <button type="button" data-label="${UINode.dataset.codeText}" class="tooltip__code js-code-symbl js-copy-char-btn" data-clipboard-text="${escapeHTML(data.html_code)}">${escapeHTML(data.html_code)}</button>
+          </li>
+        </ul>
+
+
+        ${isCopiedSymbol(symbolNum)
+          ? `<button
+            class="tooltip__btn-copy js-copy-char-btn"
+            type="button"
+            data-goal="copy_symbol"
+            data-clipboard-text="${data.symbol}"
+            data-symbol="${data.symbol}"
+          >
+            ${UINode.dataset.buttonText}
+          </button>` : ''}
+
+      </div>`;
+    return content;
+  };
+
+  return false;
+};
+
+
+// Временно
+const clickFavoritesHandler = (tooltip) => {
+  const btnFavorites = tooltip.querySelector('.js-favorites-btn');
+
+  if (btnFavorites) {
+    btnFavorites.addEventListener('click', () => {
+      if (btnFavorites.classList.contains('active')) {
+        btnFavorites.classList.remove('active');
+      } else {
+        btnFavorites.classList.add('active');
+      }
+    });
+  }
+};
+
+let timeout = null;
+
+const clickCoupyHandler = (evt) => {
+  const btn = evt.target.closest('.js-copy-char-btn');
+  if (!btn) {return};
+
+  const symbol = btn.dataset.clipboardText;
+  const popup = document.querySelector('.copy-symbol-popup');
+
+  if (popup) {
+    popup.classList.add('active');
+    let symbolContainer = popup.querySelector('.copy-symbol-popup__symbol');
+    symbolContainer.textContent = symbol;
+
+    if (btn.classList.contains('js-code-symbl')) {
+      symbolContainer.classList.add('small-fonts');
+    } else if (symbolContainer.classList.contains('small-fonts')) {
+      symbolContainer.classList.remove('small-fonts');
+    }
+
+    const hiddenPopup = () => {
+      popup.classList.remove('active');
+    }
+
+    clearTimeout(timeout);
+    timeout = setTimeout(hiddenPopup, 2000);
+  }
+};
+
+function characterPopup() {
+  if (UINode && popupArea) {
+    if (touchScreen) {
+      popupArea.addEventListener('click', (event) => {
+        if (event.target.classList.contains('js-char-popup-item') || event.target.parentNode.classList.contains('js-char-popup-item')) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      });
+    };
+
+    if (window.innerWidth < 767) {
+      const tippyInstance = tippy(popupArea, {
+        theme: 'light-border',
+        interactive: true,
+        arrow: false,
+        allowHTML: true,
+        trigger: 'manual',
+        appendTo: () => document.body,
+        content(reference) {
+          return prepareContent(reference);
+        },
+
+        onShow(instance) {
+          const tooltip = instance.popper;
+          tooltip.classList.add('popup-char');
+          const buttonsCopy = tooltip.querySelectorAll('.js-copy-char-btn');
+
+          if (buttonsCopy.length) {
+            buttonsCopy.forEach((btn) => {
+              let buttonClipboard = new ClipboardJS(btn);
+              btn.addEventListener('click', clickCoupyHandler);
+            });
+          }
+
+          // Временно
+          clickFavoritesHandler(tooltip)
+        },
+      });
+
+      const overlayFragment = document.createRange().createContextualFragment('<div class="js-char-popup-overlay" style="display: none;"></div>');
+      document.body.appendChild(overlayFragment);
+      const overlay = document.body.querySelector('.js-char-popup-overlay');
+
+      const hideTippy = function() {
+        tippyInstance.hide();
+        overlay.style.display = 'none';
+      };
+
+      overlay.addEventListener('click', hideTippy);
+
+      const showTippy = function(reference) {
+        tippyInstance.setContent(prepareContent(reference));
+        overlay.style.display = 'block';
+        tippyInstance.show();
+      };
+
+      popupArea.addEventListener('click', (event) => {
+        if (event.target.classList.contains('js-char-popup-item')) {
+          showTippy(event.target);
+        } else if (event.target.parentNode.classList.contains('js-char-popup-item')) {
+          showTippy(event.target.parentNode);
+        };
+      });
+    } else {
+      tippy.delegate(popupArea, {
+        theme: 'light-border',
+        interactive: true,
+        arrow: false,
+        animation: 'shift-away-subtle',
+        allowHTML: true,
+        placement: 'right',
+        target: '.js-char-popup-item',
+        delay: [400, 200],
+        duration: 200,
+        appendTo: () => document.body,
+        content(reference) {
+          return prepareContent(reference);
+        },
+        onShow(instance) {
+          const tooltip = instance.popper;
+          tooltip.classList.add('popup-char');
+          const buttonsCopy = tooltip.querySelectorAll('.js-copy-char-btn');
+
+          if (buttonsCopy.length) {
+            buttonsCopy.forEach((btn) => {
+              let buttonClipboard = new ClipboardJS(btn);
+              btn.addEventListener('click', clickCoupyHandler)
+            });
+          }
+
+          // Временно
+          clickFavoritesHandler(tooltip)
+        },
+      });
+    };
+  };
+};
+
+characterPopup();

@@ -1,0 +1,50 @@
+const DEBOUNCE_INTERVAL = 100;
+
+const debounce = (callback, wait = DEBOUNCE_INTERVAL) => {
+  let timeout = null;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => callback(...args), wait);
+  };
+};
+
+const initSubmenu = () => {
+  const submenuButtons = document.querySelectorAll('.js-submenu-button');
+  const menuList = document.querySelector('[data-dropdown-menu="parent"]');
+
+  const closeSubmenu = () => {
+    const activeMenuButton = menuList.querySelector('.active')
+    activeMenuButton.classList.remove('active');
+    const submenuCloseButton = activeMenuButton.parentNode.querySelector('.js-submenu-close-button');
+
+    const submenuItems = activeMenuButton.parentNode.querySelectorAll('[data-submenu="item"]');
+    submenuCloseButton.removeEventListener('click', closeSubmenu);
+
+    submenuCloseButton.setAttribute('tabindex', '-1');
+    submenuItems.forEach(item => {
+        item.setAttribute('tabindex', '-1');
+    })
+  }
+
+  const submenuOpen = (evt) => {
+    const currentMenuButton = evt.currentTarget;
+    const openedMenuItem = currentMenuButton.parentNode
+
+    currentMenuButton.classList.add('active');
+    const submenuCloseButton = openedMenuItem.querySelector('.js-submenu-close-button');
+    const submenuItems = openedMenuItem.querySelectorAll('[data-submenu="item"]');
+
+    submenuCloseButton.setAttribute('tabindex', '0');
+    submenuItems.forEach(item => {
+        item.setAttribute('tabindex', '0');
+    })
+
+    submenuCloseButton.addEventListener('click', closeSubmenu);
+  }
+
+  submenuButtons.forEach(button => {
+    button.addEventListener('click', submenuOpen);
+  })
+}
+
+initSubmenu();

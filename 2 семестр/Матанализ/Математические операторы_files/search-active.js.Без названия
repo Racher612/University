@@ -1,0 +1,78 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const searchForm = document.querySelector('[data-search-form="form"]');
+
+    if (searchForm) {
+        const searchButton = searchForm.querySelector('[data-search-form="search-button"]');
+        const searchInput = searchForm.querySelector('[data-search-form="input"]');
+        const searchClear = searchForm.querySelector('[data-search-form="clear"]');
+
+
+        if (searchButton) {
+            searchButton.addEventListener('click', (e) => {
+                if (!searchForm.classList.contains('active')) {
+                    e.preventDefault();
+                    searchForm.classList.add('active');
+                    searchInput.focus();
+                }
+            })
+        }
+
+        searchInput.addEventListener('focus', () => {
+            if (window.innerWidth < 1024) return;
+            searchForm.classList.add('active');
+            searchInput.selectionStart = searchInput.value.length;
+            if (searchInput.value != '') {
+                searchClear.classList.remove('hide');
+            }
+        })
+
+        searchInput.addEventListener('blur', () => {
+            if (searchInput.value == '') {
+                searchForm.classList.remove('active');
+            }
+        })
+
+        searchInput.addEventListener('input', () => {
+            if (searchInput.value != '') {
+                searchClear.classList.remove('hide');
+            } else {
+                searchClear.classList.add('hide');
+            }
+        })
+
+        searchClear.addEventListener('click', () => {
+            searchInput.value = '';
+            searchClear.classList.add('hide');
+            searchInput.focus();
+        })
+
+
+        // Mobile
+
+        const mobileSearchButton = document.querySelector('[data-search-form="mobile-open-button"]');
+        const searchClose = searchForm.querySelector('[data-search-form="close"]');
+
+        searchInput.addEventListener('click', (e) => {
+            if (window.innerWidth > 1023) return;
+            searchInput.blur();
+            searchForm.classList.add('active');
+            searchInput.focus();
+        })
+
+        mobileSearchButton.addEventListener('click', () => {
+            searchForm.classList.add('active');
+            searchInput.focus();
+        })
+
+        searchClose.addEventListener('click', () => {
+            searchForm.classList.remove('active');
+        })
+
+
+
+        if (searchInput.value != '' && window.innerWidth > 1023) {
+          searchForm.classList.add('active');
+          searchClear.classList.remove('hide');
+        }
+    }
+})

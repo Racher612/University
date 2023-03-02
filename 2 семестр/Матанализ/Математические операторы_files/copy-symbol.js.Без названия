@@ -1,0 +1,84 @@
+const copySymbol = () => {
+  let textArea;
+
+  const isOS = () => {
+    return navigator.userAgent.toLowerCase().match(/ipad|iphone/i);
+  };
+
+  const createTextArea = (text) => {
+    textArea = document.createElement('textArea');
+    textArea.setAttribute('readonly', true);
+    textArea.style.position = 'fixed';
+    textArea.value = text;
+    document.body.appendChild(textArea);
+  };
+
+  const selectText = () => {
+    let range;
+    let selection;
+
+    if (isOS()) {
+      range = document.createRange();
+      range.selectNodeContents(textArea);
+      selection = window.getSelection();
+      selection.removeAllRanges();
+      selection.addRange(range);
+      textArea.setSelectionRange(0, 999999);
+    } else {
+      textArea.select();
+    }
+  };
+
+  const copyToClipboard = () => {
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+  };
+
+  const copy = (text) => {
+    createTextArea(text);
+    selectText();
+    copyToClipboard();
+  };
+
+
+  let timeout = null;
+
+  document.addEventListener('click', function (evt) {
+    const btnCopy = evt.target.closest('.js-symbol-copy');
+    if (!btnCopy) {return};
+
+    let symbol = btnCopy.dataset.symbol;
+    if (typeof symbol === 'undefined') {
+      symbol = btnCopy.dataset.copy;
+    }
+
+    copy(symbol);
+
+    const setPopup = document.querySelector('.copy-symbol-popup');
+
+    const symbolContainer = setPopup.querySelector('.copy-symbol-popup__symbol');
+
+    if (setPopup) {
+      if (btnCopy.hasAttribute('data-no-symbol-popup')) symbolContainer.style.display = 'none';
+
+      setPopup.classList.add('active');
+      symbolContainer.textContent = symbol;
+
+      if (btnCopy.classList.contains('js-code-symbl')) {
+        symbolContainer.classList.add('small-fonts');
+      } else if (symbolContainer.classList.contains('small-fonts')) {
+        symbolContainer.classList.remove('small-fonts');
+      }
+
+      const hiddenPopup = () => {
+        setPopup.classList.remove('active');
+        if (btnCopy.hasAttribute('data-no-symbol-popup')) symbolContainer.style.display = null;
+      }
+
+      clearTimeout(timeout);
+      timeout = setTimeout(hiddenPopup, 1000);
+    }
+  });
+};
+
+copySymbol();

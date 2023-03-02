@@ -1,0 +1,45 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const categoryTitles = document.querySelectorAll('[data-proposed-sets="category-title"]');
+
+    const showCurrentElement = () => {
+        const currentItem = document.querySelector('[data-proposed-sets="current"]');
+        const list = currentItem.parentElement;
+        const categoryTitle = list.parentElement.querySelector('[data-proposed-sets="category-title"]');
+        const container = document.querySelector('[data-proposed-sets="container"]');
+
+        const scrollHeight = currentItem.offsetTop - categoryTitle.offsetHeight;
+
+        if (categoryTitle.classList.contains('open')) {
+            list.style = null;
+            categoryTitle.classList.remove('open')
+        } else {
+            if (document.documentElement.clientWidth > 1023) {
+                list.style = `max-height: ${list.scrollHeight}px; transition: none`;
+            } else {
+                list.style = `max-height: none; transition: none`
+            }
+            categoryTitle.classList.add('open')
+        }
+
+        container.scrollTo({
+            top: scrollHeight,
+        })
+    }
+
+    categoryTitles.forEach(item => {
+        item.addEventListener('click', () => {
+            const list = item.parentElement.querySelector('[data-proposed-sets="category-list"]')
+
+
+            if (item.classList.contains('open')) {
+                list.style = null;
+                item.classList.remove('open')
+            } else {
+                list.style = `max-height: ${list.scrollHeight}px`
+                item.classList.add('open')
+            }
+        });
+    });
+
+    showCurrentElement()
+})

@@ -1,0 +1,57 @@
+const initLanguageSelect = (container) => {
+  const btn = container.querySelector('[data-language-select="button"]');
+  const languageList = container.querySelector('.language-select__list');
+  const mobileHideContainer = document.querySelector('.js-mobile-hide-container');
+
+  const isClicked = (evt) => {
+    const targetClick = evt.target;
+    const itsMenu = targetClick === languageList || languageList.contains(targetClick);
+    const itsHamburger = targetClick === btn;
+    const menuIsActive = container.classList.contains('active');
+
+    if (!itsMenu && !itsHamburger && menuIsActive) {
+      container.classList.remove('active');
+      document.removeEventListener('click', isClicked);
+    }
+  };
+
+  const closeMobileLangSelect = () => {
+    mobileHideContainer.style = null;
+    container.classList.remove('active');
+    document.querySelector('.js-mobile-lang-close-button').removeEventListener('click', closeMobileLangSelect);
+  }
+
+  const openMobileLangSelect = () => {
+    mobileHideContainer.style.display = 'none';
+    document.querySelector('.js-mobile-lang-close-button').addEventListener('click', closeMobileLangSelect);
+  }
+
+  if (btn) {
+    btn.addEventListener('click', () => {
+      if (container.classList.contains('active') && document.documentElement.clientWidth > 1023) {
+        container.classList.remove('active');
+        document.removeEventListener('click', isClicked);
+      } else {
+        container.classList.add('active');
+
+        if (document.documentElement.clientWidth < 1024) {
+          openMobileLangSelect()
+        } else {
+          document.addEventListener('click', isClicked);
+        }
+      }
+    });
+  }
+};
+
+const languageSelect = () => {
+  const languageContainers = document.querySelectorAll('[data-language-select="container"]');
+
+  if (languageContainers.length) {
+    languageContainers.forEach((container) => {
+      initLanguageSelect(container);
+    });
+  }
+};
+
+languageSelect();

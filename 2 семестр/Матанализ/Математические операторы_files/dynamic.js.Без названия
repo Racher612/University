@@ -1,0 +1,18 @@
+romd = window.romd || {cmd: []};
+(function (c, cb) {
+  var d = document, s = d.createElement('script'), x, t, q = [];
+  s.type = 'text/javascript';
+  s.async = 1;
+  s.src = 'https://cdn.skcrtxr.com/wrapper/js/dynamic-engine.js?v=s-aa70a4d5-5000-47ce-a7c5-2dbbb126504e';
+  for (x in c) q.push(x + '=' + c[x].join(','));
+  s.src += q.join('&');
+  t = document.getElementsByTagName('head')[0];
+  t.insertBefore(s, t.firstChild);
+  if (cb) {
+    cb.call();
+  }
+})({}, function () {
+  romd.cmd.push(function () {
+    romd.display([{"selector":".roxot-dynamic.incontent-rectangle","rerunTimeLimit":500,"infinityScroll":true,"placementId":"82e40919-d091-4b73-adf7-7ab035a148f1"},{"selector":".roxot-dynamic.billboard-atf","rerunTimeLimit":500,"infinityScroll":true,"placementId":"4061ee4a-58c3-465b-8f23-fd29d60cd323"},{"selector":".roxot-dynamic.desktop-left-rectangle","rerunTimeLimit":500,"infinityScroll":true,"placementId":"58d15798-0393-4a96-9c1d-ec95c2793181"},{"selector":".roxot-dynamic.desktop-right-rectangle","rerunTimeLimit":500,"infinityScroll":true,"placementId":"b63b9e63-2fa3-4599-b484-c7f2de93dd23"},{"selector":".roxot-dynamic.mobile-stick","rerunTimeLimit":500,"infinityScroll":true,"placementId":"907d3d23-51e1-494a-80c2-3af5734ec2ee"},{"selector":".roxot-dynamic.symbl-billboard-atf","rerunTimeLimit":500,"infinityScroll":true,"placementId":"3cbb83f7-ea7a-44b1-b47e-31959f0f78f5"},{"selector":".roxot-dynamic.symbl-bottom-stick","rerunTimeLimit":500,"infinityScroll":true,"placementId":"39b83b91-8b2e-4444-91fa-070307fb9de2"},{"selector":".roxot-dynamic.symbl-left-rectangle","rerunTimeLimit":500,"infinityScroll":true,"placementId":"9f908866-82df-4abb-b49e-4b2e3f1340d9"}]);
+  });
+});
