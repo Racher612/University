@@ -20,8 +20,18 @@ class lab:
 
 
     def histogram(self):
-        plt.hist(self.table['xi'], color='blue', edgecolor='black',
+        fig, ax = plt.subplots(1, 1)
+        ax.hist(self.table['xi'], color='blue', edgecolor='black',
                  bins = len(set(self.data)), bottom = min(data))
+
+        # Set title
+        ax.set_title("Диаграмма распределения результатов измерения")
+
+        # adding labels
+        ax.set_xlabel('Xi, c', loc = 'right')
+        ax.set_ylabel('Ni', loc = 'top')
+        '''plt.hist(self.table['xi'], color='blue', edgecolor='black',
+                 bins = len(set(self.data)), bottom = min(data))'''
         plt.show()
 
     def __init__(self, arr):
@@ -89,6 +99,6 @@ data3 = [1.38, 1.23, 1.35, 1.40]
 data4 = list(map(lambda x: x - 0.5, [1.90, 1.74, 1.68, 1.91, 1.81, 2.06, 1.70, 1.70, 1.75, 1.82, 1.83, 1.80]))
 
 obj = lab(data1)
-obj.prt()
+obj.histogram()
 #print(obj.build_table())
-obj.excel_out()
+#obj.excel_out()
