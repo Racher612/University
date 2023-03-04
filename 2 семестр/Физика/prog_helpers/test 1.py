@@ -22,6 +22,7 @@ class lab:
     def histogram(self):
         plt.hist(self.table['xi'], color='blue', edgecolor='black',
                  bins = len(set(self.data)), bottom = min(data))
+        plt.xlabel('f', loc = 'right')
         plt.show()
 
     def __init__(self, arr):
